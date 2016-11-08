@@ -10,6 +10,6 @@
   "author": "",
   "license": "WTFPL",
   "dependencies": {
-    "couch-db": "^1.1.3"
+    "pouchdb": "^6.0.7"
   }
 }
