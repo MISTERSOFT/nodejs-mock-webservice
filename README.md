@@ -7,3 +7,7 @@
 - Make Database
 - Put Mock-data in db
 - Make doc
+
+# Technologies
+- NodeJS
+- [PouchDB](https://pouchdb.com/)
