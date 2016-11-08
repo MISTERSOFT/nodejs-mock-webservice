@@ -4,21 +4,15 @@
 
 // Import
 const http = require('http');
-const couchDB = require('couch-db');
+const PouchDB = require('pouchdb');
 
 // Constants
 const host = 'localhost';
 const httpPort = 3001;
-const dbHost = 'http://localhost:3002/';
 
 // Variables
 let httpServer = null;
-let couchServer = null;
-
-// Init database
-couchServer = couch(dbHost, {
-    rejectUnauthorized: false
-});
+let database = new PouchDB('api');
 
 // Init http server
 httpServer = http.createServer( (request, response) => {
