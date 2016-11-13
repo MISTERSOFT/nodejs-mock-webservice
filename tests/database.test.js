@@ -62,7 +62,6 @@ describe('Database', () => {
         it('should get all products', () => {
             db.getAllProducts().then((result) => {
                 expect(result).to.have.key('total_rows');
-                expect(result).to.have.key('rows');
             });
         });
     });
