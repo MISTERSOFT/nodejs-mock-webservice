@@ -3,11 +3,7 @@
 # Nothing works
 
 ## Todos :
-- Make routes
-- Make Database
-- Put Mock-data in db
-- Make doc
-
-# Technologies
-- NodeJS
-- [PouchDB](https://pouchdb.com/)
+- [ ] Make routes
+- [x] Make Database
+- [x] Put Mock-data in db
+- [ ] Make simple doc
