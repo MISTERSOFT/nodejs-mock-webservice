@@ -14,11 +14,11 @@ const httpPort = 3001;
 let httpServer = null;
 let db = new Database();
 
-// Use this if you want fill the database
-db.fillDatabaseWithMockData(5);
+// Use this if you want fill the database - Disabled after use
+// db.fillDatabaseWithMockData(1);
 
-// Use this only if you want to reset all mock data
-// db.freshMockData();
+// Use this only if you want to reset all mock data - Disabled after use
+console.log(db.deleteMockData());
 
 // Init http server
 httpServer = http.createServer( (request, response) => {

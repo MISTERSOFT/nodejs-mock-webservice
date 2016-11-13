@@ -1,11 +1,13 @@
 const PouchDB = require('pouchdb');
 const Product = require('./models/product.js');
 
-let database = new PouchDB('market');
+// let database = new PouchDB('market');
 
 module.exports = class Database {
 
-    constructor() { }
+    constructor() {
+        this.database = new PouchDB('market');
+    }
 
     /**
      * Fill the database with some mock data
@@ -14,7 +16,14 @@ module.exports = class Database {
         var i = 0;
         for(i; i < howManyProduct; i++) {
             let price = (Math.random() * ( (i + 1) - i) + i).toFixed(2);
-            this.addProduct(new Product(this.generateUniqueID(), `Product number ${i}`, `Description of product ${i}`, price));
+            this.addProduct(
+                new Product(
+                    this.generateUniqueID(),
+                    'Product number ' + i,
+                    'Description of product ' + i,
+                    price
+                )
+            );
         }
     }
 
@@ -29,14 +38,15 @@ module.exports = class Database {
      * Delete database
      * Call this function is you want to reset all data
      */
-    freshMockData () {
+    deleteMockData () {
 
-        database.destroy().then((response) => {
+        return this.database.destroy().then((response) => {
 
             if (response.ok) {
                 console.log('*************************************');
                 console.log('* Database successfully destroyed ! *');
                 console.log('*************************************');
+                return Promise.resolve(response);
             }
 
         }).catch((error) => {
@@ -52,17 +62,18 @@ module.exports = class Database {
 
     /**
      * Add product into database
-     * @param product object Product to add
+     * @param {object} product Product to add
      */
     addProduct (product) {
 
         //product._id = 'products/' + Date.now(); // Product Id generated
 
-        database.put(product).then((result) => {
+        return this.database.put(product).then((result) => {
 
             if (result.ok) {
                 console.log('Product successfully added ! With ID : ' + result.id);
                 // todo : return JSON success
+                return Promise.resolve(result);
             }
             
         }).catch((error) => {
@@ -77,14 +88,14 @@ module.exports = class Database {
 
     /**
      * Update product into database
-     * @param id        string  Product ID
-     * @param product   object  Contain the new value of the product  
+     * @param {string} id       Product ID
+     * @param {object} product  Contain the new value of the product  
      */
     updateProduct (id, product) {
 
-        database.get(id).then((doc) => {
+        return this.database.get(id).then((doc) => {
 
-            return database.put({
+            return this.database.put({
                 _id: id,
                 _rev: doc._rev,
                 title: product.title || doc.title,
@@ -97,6 +108,7 @@ module.exports = class Database {
             if (result.ok) {
                 console.log('Product successfully updated !', result);
                 // todo : return JSON success
+                return Promise.resolve(result);
             }
 
         }).catch((error) => {
@@ -111,19 +123,20 @@ module.exports = class Database {
 
     /**
      * Delete a product into the database
-     * @param id string Product ID
+     * @param {string} id Product ID
      */
     deleteProduct (id) {
 
-        database.get(id).then((doc) => {
+        return this.database.get(id).then((doc) => {
 
-            return database.remove(doc);
+            return this.database.remove(doc);
 
         }).then((result) => {
 
             if (result.ok) {
                 console.log('Product successfully deleted !', result);
                 // todo : return JSON success
+                return Promise.resolve(result);
             }
 
         }).catch((error) => {
@@ -138,15 +151,16 @@ module.exports = class Database {
 
     /**
      * Fetch a product from the database
-     * @param id string Product ID
+     * @param {string} id Product ID
      */
     getProduct (id) {
 
-        database.get(id).then((doc) => {
+        return this.database.get(id).then((doc) => {
 
             if (doc) {
                 console.log('Product successfully fetched !', doc);
                 // todo : return JSON success
+                return Promise.resolve(doc);
             }
 
         }).catch((error) => {
@@ -164,13 +178,14 @@ module.exports = class Database {
      */
     getAllProducts () {
 
-        database.allDocs({
+        return this.database.allDocs({
 
             include_docs: true
 
         }).then((result) => {
             
             console.log('Products successfully fetched !', result);
+            return Promise.resolve(result);
             // todo : return JSON success
 
         }).catch((error) => {
