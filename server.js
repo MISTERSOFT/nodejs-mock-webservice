@@ -4,7 +4,7 @@
 
 // Import
 const http = require('http');
-const PouchDB = require('pouchdb');
+const Database = require('./database.js');
 
 // Constants
 const host = 'localhost';
@@ -12,7 +12,13 @@ const httpPort = 3001;
 
 // Variables
 let httpServer = null;
-let database = new PouchDB('api');
+let db = new Database();
+
+// Use this if you want fill the database
+db.fillDatabaseWithMockData(5);
+
+// Use this only if you want to reset all mock data
+// db.freshMockData();
 
 // Init http server
 httpServer = http.createServer( (request, response) => {
