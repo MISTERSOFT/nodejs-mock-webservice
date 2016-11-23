@@ -79,8 +79,11 @@ module.exports = class Database {
         }).catch((error) => {
 
             console.log('Error happened, the product couln\'t be added !', error);
-            // todo : return JSON error
-
+            return Promise.reject({
+                success: false,
+                message: 'Error happened, the product couln\'t be added !',
+                error: error
+            });
         });
 
     }
@@ -107,15 +110,17 @@ module.exports = class Database {
 
             if (result.ok) {
                 console.log('Product successfully updated !', result);
-                // todo : return JSON success
                 return Promise.resolve(result);
             }
 
         }).catch((error) => {
 
             console.log('Error happened, the product couln\'t be updated !', error);
-            // todo : return JSON error
-
+            return Promise.reject({
+                success: false,
+                message: 'Error happened, the product couln\'t be updated !',
+                error: error
+            });
         });
 
     }
@@ -135,15 +140,17 @@ module.exports = class Database {
 
             if (result.ok) {
                 console.log('Product successfully deleted !', result);
-                // todo : return JSON success
                 return Promise.resolve(result);
             }
 
         }).catch((error) => {
 
             console.log('Error happened, the product couln\'t be deleted !', error);
-            // todo : return JSON error
-            
+            return Promise.reject({
+                success: false,
+                message: 'Error happened, the product couln\'t be deleted !',
+                error: error
+            });
         });
 
     }
@@ -159,15 +166,17 @@ module.exports = class Database {
 
             if (doc) {
                 console.log('Product successfully fetched !', doc);
-                // todo : return JSON success
                 return Promise.resolve(doc);
             }
 
         }).catch((error) => {
 
             console.log('Error happened, the product couln\'t be fetched !', error);
-            // todo : return JSON error
-
+            return Promise.reject({
+                success: false,
+                message: 'Error happened, the product couln\'t be fetched !',
+                error: error
+            });
         });
 
     }
@@ -191,8 +200,11 @@ module.exports = class Database {
         }).catch((error) => {
 
             console.log('Error happened, products couln\'t be fetched !', error);
-            // todo : return JSON error
-
+            return Promise.reject({
+                success: false,
+                message: 'Error happened, products couln\'t be fetched !',
+                error: error
+            });
         });
 
     }
