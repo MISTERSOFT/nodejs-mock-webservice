@@ -194,17 +194,14 @@ module.exports = class Database {
         }).then((result) => {
             
             console.log('Products successfully fetched !', result);
-            return Promise.resolve(result);
-            // todo : return JSON success
+            return new Promise((resolve, reject) => {
+                resolve(result);
+            });
 
         }).catch((error) => {
 
             console.log('Error happened, products couln\'t be fetched !', error);
-            return Promise.reject({
-                success: false,
-                message: 'Error happened, products couln\'t be fetched !',
-                error: error
-            });
+            // return Promise.reject(error);
         });
 
     }

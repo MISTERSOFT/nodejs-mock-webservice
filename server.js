@@ -14,7 +14,7 @@ let httpServer = null;
 let db = new Database();
 
 // Use this if you want fill the database - Disabled after use
-// db.fillDatabaseWithMockData(1);
+// db.fillDatabaseWithMockData(10);
 
 // Use this only if you want to reset all mock data - Disabled after use
 // console.log(db.deleteMockData());
@@ -22,32 +22,45 @@ let db = new Database();
 // Init http server
 httpServer = http.createServer( (request, response) => {
 
-    let Rest = new REST(db);
+    if (request.url === '/') {
+        _responseServer(response, JSON.stringify({message: 'Nothing here'}));
+    }
 
-    // Get
-    if (request.method === 'GET') {
-        let urlParsed = _parseUrl(request.url);
-        if (urlParsed.length === 1) {
-            _responseServer(response, Rest.get().getJson());
+    let urlParsed = _parseUrl(request.url);
+
+    if (urlParsed.length > 0) {
+        let Rest = new REST(db);
+
+        // Get
+        if (request.method === 'GET') {
+
+            if (urlParsed.length === 1) {
+                _responseServer(response, Rest.get().getJson());
+            }
+            else {
+                _responseServer(response, Rest.get(urlParsed[1]).getJson());
+            }
+
         }
-        else {
-            _responseServer(response, Rest.get(urlParsed[1]).getJson());
+
+        // Post
+        if (request.method === 'POST') {
+
         }
+        
+        // Put
+        if (request.method === 'PUT') {
+
+        }
+
+        // Delete
+        if (request.method === 'DELETE') {
+
+        }
+
     }
-
-    // Post
-    if (request.method === 'POST') {
-
-    }
-    
-    // Put
-    if (request.method === 'PUT') {
-
-    }
-
-    // Delete
-    if (request.method === 'DELETE') {
-
+    else {
+        _404(response);
     }
 
 
@@ -83,11 +96,26 @@ httpServer.listen(Constants.httpPort, Constants.host, () => {
 
 //// Server methods
 
+// function _parseUrl(url) {
+//     let urlArr = [];
+    
+//     urlArr = url.split('/');
+//     urlArr.shift();
+//     return urlArr;
+// }
+
 function _parseUrl(url) {
-    let urlArr = url.split('/');
-    urlArr.shift();
-    return urlArr;
-}
+    let paramsUrl = [];
+    let matchUrl = /products(\/\d+)?/i.test(url);
+    if (matchUrl) {
+        paramsUrl = url.split('/');
+        paramsUrl.shift();
+        if (paramsUrl[paramsUrl.length - 1] === '') {
+            paramsUrl.pop();
+        }
+    }
+    return paramsUrl;
+} 
 
 
 //// Response to Client

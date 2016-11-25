@@ -6,7 +6,7 @@ module.exports = class REST {
      * @param {Object} database Database to request
      */
     constructor(database) {
-        this.json = {};
+        this.json = null;
         this.db = database;
     }
 
@@ -62,7 +62,13 @@ module.exports = class REST {
         // if (id !== null && product !== null) {
         this.db.updateProduct(id, product)
             .then(this.successPromise)
-            .catch(this.errorPromise);
+            .catch((err) => {
+                this.json = {
+                    success: false,
+                    error: err
+                };
+                return this.json;
+            });
         // }
         return this;
     }
@@ -89,12 +95,15 @@ module.exports = class REST {
             success: true,
             result: data
         };
-        return json;
+        return this.json;
     }
 
     errorPromise(error) {
-        this.json = error;
-        return json;
+        this.json = {
+            success: false,
+            error: error
+        };
+        return this.json;
     }
 
 }
