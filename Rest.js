@@ -25,9 +25,10 @@ module.exports = class REST {
      * @returns {Object}
      */
     get(id = null) {
+        let that = this;
         if (id === null) {
             this.db.getAllProducts()
-                .then(this.successPromise)
+                .then(this.successPromise.bind(that))
                 .catch(this.errorPromise);
         }
         else {
@@ -44,6 +45,7 @@ module.exports = class REST {
      * @returns {Object}
      */
     post(product = null) {
+        let that = this;
         // if (product !== null) {
         this.db.addProduct(product)
             .then(this.successPromise)
@@ -59,6 +61,7 @@ module.exports = class REST {
      * @returns {Object}
      */
     put(id, product) {
+        let that = this;
         // if (id !== null && product !== null) {
         this.db.updateProduct(id, product)
             .then(this.successPromise)
@@ -79,6 +82,7 @@ module.exports = class REST {
      * @returns {Object}
      */
     delete(id = null) {
+        let that = this;
         // if (id !== null) {
         this.db.deleteProduct(id)
             .then(this.successPromise)
@@ -91,7 +95,7 @@ module.exports = class REST {
     //// Promise methods
 
     successPromise(data) {
-        this.json = {
+        that.json = {
             success: true,
             result: data
         };
@@ -99,7 +103,7 @@ module.exports = class REST {
     }
 
     errorPromise(error) {
-        this.json = {
+        that.json = {
             success: false,
             error: error
         };

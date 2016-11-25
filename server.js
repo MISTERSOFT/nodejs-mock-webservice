@@ -35,10 +35,32 @@ app.get('/', (req, res, next) => {
     text += '/products/:id\n';
     text += '* POST :\n';
     text += '/products => With params { title: "A title", description: "A description", price: 10 }\n';
-    text += 'TODO'
+    text += 'TODO';
     res.end(text);
 });
 
+// Feed database
+app.get('/generate', (req, res, next) => {
+    db.fillDatabaseWithMockData(10);
+    let text = '';
+    text += '10 products has been added\n';
+    text += Rest.get().getJson();
+    res.end(text);
+});
+
+app.get('/generate/:n', (req, res, next) => {
+    db.fillDatabaseWithMockData(req.params.n);
+});
+
+// Destroy the database
+app.get('/destroy', (req, res, next) => {
+    db.deleteMockData();
+    res.end('Database has been destroyed');
+});
+
+/**
+ * GET
+ */
 app.get('/products', (req, res, next) => {
     _responseServer(res, Rest.get().getJson());
 });
@@ -47,11 +69,27 @@ app.get('/products/:id', (req, res, next) => {
     res.end('Route: ' + req.url + ' => params = ' + req.params.id);
 });
 
+/**
+ * POST
+ */
 app.post('/products', (req, res, next) => {
     // req.body.title
-    res.end('/products => params = ');
+    res.end('/products => params = ' + req.body.title);
 });
-app.get('/products', (req, res, next) => {
+
+/**
+ * PUT
+ */
+app.put('/products', (req, res, next) => {
+    // req.body.id
+    res.end(JSON.stringify({message: 'bjr'}));
+});
+
+/**
+ * DELETE
+ */
+app.delete('/products/:id', (req, res, next) => {
+    // req.params.id
     res.end(JSON.stringify({message: 'bjr'}));
 });
 
@@ -154,7 +192,7 @@ function _parseUrl(url) {
         }
     }
     return paramsUrl;
-} 
+}
 
 
 //// Response to Client
