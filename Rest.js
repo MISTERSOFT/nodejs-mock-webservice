@@ -25,89 +25,64 @@ module.exports = class REST {
      * @returns {Object}
      */
     get(id = null) {
-        let that = this;
         if (id === null) {
-            this.db.getAllProducts()
-                .then(this.successPromise.bind(that))
-                .catch(this.errorPromise);
-        }
-        else {
-            this.db.getProduct(id)
+            return this.db.getAllProducts()
                 .then(this.successPromise)
                 .catch(this.errorPromise);
         }
-        return this;
+        else {
+            return this.db.getProduct('products/' + id)
+                .then(this.successPromise)
+                .catch(this.errorPromise);
+        }
     }
 
     /**
      * POST Http Method
-     * @param {Object} product The object of the product to create
+     * @param   {Object} product The object of the product to create
      * @returns {Object}
      */
     post(product = null) {
-        let that = this;
-        // if (product !== null) {
-        this.db.addProduct(product)
+        product._id = this.db.generateUniqueID();
+        return this.db.addProduct(product)
             .then(this.successPromise)
             .catch(this.errorPromise);
-        // }
-        return this;
     }
 
     /**
      * PUT Http Method
-     * @param {string} id       ID of the product to update
-     * @param {Object} product  The object of the product to update
+     * @param   {Object} product  The object of the product to update
      * @returns {Object}
      */
-    put(id, product) {
-        let that = this;
-        // if (id !== null && product !== null) {
-        this.db.updateProduct(id, product)
+    put(product) {
+        return this.db.updateProduct(product)
             .then(this.successPromise)
-            .catch((err) => {
-                this.json = {
-                    success: false,
-                    error: err
-                };
-                return this.json;
-            });
-        // }
-        return this;
+            .catch(this.errorPromise);
     }
 
     /**
      * DELETE Http Method
-     * @param {string} id ID of the product to delete
+     * @param   {string} id ID of the product to delete
      * @returns {Object}
      */
     delete(id = null) {
-        let that = this;
-        // if (id !== null) {
-        this.db.deleteProduct(id)
+        return this.db.deleteProduct(id)
             .then(this.successPromise)
             .catch(this.errorPromise);
-        // }
-        return this;
     }
 
 
     //// Promise methods
 
     successPromise(data) {
-        that.json = {
+        return {
             success: true,
             result: data
         };
-        return this.json;
     }
 
     errorPromise(error) {
-        that.json = {
-            success: false,
-            error: error
-        };
-        return this.json;
+        return error;
     }
 
 }

@@ -66,8 +66,6 @@ module.exports = class Database {
      */
     addProduct (product) {
 
-        //product._id = 'products/' + Date.now(); // Product Id generated
-
         return this.database.put(product).then((result) => {
 
             if (result.ok) {
@@ -91,28 +89,21 @@ module.exports = class Database {
 
     /**
      * Update product into database
-     * @param {string} id       Product ID
-     * @param {object} product  Contain the new value of the product  
+     * @param {object} product  Contain the new value of the product
      */
-    updateProduct (id, product) {
+    updateProduct (product) {
 
-        return this.database.get(id).then((doc) => {
-
-            return this.database.put({
-                _id: id,
-                _rev: doc._rev,
-                title: product.title || doc.title,
-                price: product.price || doc.price,
-                description: product.description || doc.description
-            });
-
+        return this.database.put({
+            _id: product._id,
+            _rev: product._rev,
+            title: product.title,
+            price: product.price,
+            description: product.description
         }).then((result) => {
-
             if (result.ok) {
                 console.log('Product successfully updated !', result);
                 return Promise.resolve(result);
             }
-
         }).catch((error) => {
 
             console.log('Error happened, the product couln\'t be updated !', error);
@@ -201,7 +192,7 @@ module.exports = class Database {
         }).catch((error) => {
 
             console.log('Error happened, products couln\'t be fetched !', error);
-            // return Promise.reject(error);
+            return Promise.reject(error);
         });
 
     }
