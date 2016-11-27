@@ -80,7 +80,7 @@ You can access to the API via these URLs bellow using Http request method :
     ```json
     {
         "success": false,
-        "message": "error text"
+        "message": "error text",
         "error": {}
     }
     ```
