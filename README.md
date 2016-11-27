@@ -72,16 +72,16 @@ You can access to the API via these URLs bellow using Http request method :
     * Successful request
     ```json
     {
-        success: true,
-        result: {}
+        "success": true,
+        "result": {}
     }
     ```
     * Failed request
     ```json
     {
-        success: false,
-        message: 'error text'
-        error: {}
+        "success": false,
+        "message": "error text"
+        "error": {}
     }
     ```
 * Server run on port 3001, change the port in the "contants.js" file if you need.
