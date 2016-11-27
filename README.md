@@ -11,19 +11,31 @@ All returning data are in JSON.
 ## How to use
 You can access to the API via these URLs bellow using Http request method :
 
-* ## GET
+* GET
     * /generate
+    
     Generate 10 products by default. If you run the server, this going to create a database directly.
+    
     * /generate/{n}
+    
     Generate N products.
-    Exemple : http://localhost:3001/generate/6
+    
+    _Exemple : http://localhost:3001/generate/6_
+    
     * /destroy
+    
     Destroy the database. Erase everything and database itself.
+    
     * /products
+    
     Fetch all products
+    
     * /products/{id}
+    
     Fetch product by its ID
-    Exemple : http://localhost:3001/products/80ekywaf
+    
+    _Exemple : http://localhost:3001/products/80ekywaf_
+    
     Return :
     ```json
     {
@@ -37,9 +49,11 @@ You can access to the API via these URLs bellow using Http request method :
         }
     }
     ```
-* ## POST
+* POST
     * /products
+    
     Create a product into the database.
+    
     Model use for product :
     ```javascript
     {
@@ -49,9 +63,11 @@ You can access to the API via these URLs bellow using Http request method :
         price = 12.5
     }
     ```
-* ## PUT
+* PUT
     * /products
+    
     Update a product into the database.
+    
     Model use for product :
     ```javascript
     {
@@ -62,10 +78,12 @@ You can access to the API via these URLs bellow using Http request method :
         _rev: '1-2a387c1924a3451f50e2205438e5aa06'
     }
     ```
-* ## DELETE
+* DELETE
     * /products/{id}
+    
     Delete a product into the database.
-    Exemple : http://localhost:3001/products/80ekywaf
+    
+    _Exemple : http://localhost:3001/products/80ekywaf_
 
 ## Others
 * Returned values
