@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>NodeJS Mock WebService</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style></style>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <h1>Presentation</h1>
+        <p>This API allow you to access mock data. You have to test you code with some data via an API but you don't have any network ? You can download this on <a href="https://github.com/MISTERSOFT/nodejs-mock-webservice">Github</a> !</p>
+        <p>All returning data are in JSON.</p>
+
+        <h1>Pre-requisites</h1>
+        <ul>
+            <li><a href="https://nodejs.org/en/">Install NodeJS</a> - (Use a version of NodeJS that allow ES6 Javascript)</li>
+            <li>Run <b>npm install</b> - To install all dependencies</li>
+        </ul>
+
+        <h1>How to use</h1>
+        <p>You can access to the API via these URLs bellow using Http request method :</p>
+        <ul>
+            <li>
+                <h3>GET</h3>
+                <ul>
+                    <li>
+                        <code>/generate</code>
+                        <p>Generate 10 products by default. If you run the server, this going to create a database directly.</p>
+                    </li>
+                    <li>
+                        <code>/generate/{n}</code>
+                        <p> Generate N products.</p>
+                        <p> Exemple : http://localhost:3001/generate/6</p>
+                    </li>
+                    <li>
+                        <code>/destroy</code>
+                        <p>Destroy the database. Erase everything and database itself.</p>
+                    </li>
+                    <li>
+                        <code>/products</code>
+                        <p> Fetch all products</p>
+                    </li>
+                    <li>
+                        <code>/products/{id}</code>
+                        <p>Fetch product by its ID</p>
+                        <p>Exemple : <code>http://localhost:3001/products/80ekywaf</code></p>
+                        <p>Return :</p>
+                        <pre>
+{
+    "success":true,
+    "result": {
+        "title": "Product number 1", 
+        "description": "Description of product 1",
+        "price": "1.60",
+        "_id":"products/80ekywafg",
+        "_rev":"1-2a387c1924a3451f50e2205438e5aa06"
+    }
+}
+                        </pre>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <h3>POST</h3>
+                <ul>
+                    <li>
+                        <code>/products</code>
+                        <p>Create a product into the database.</p>
+                        <p>Model use for product :</p>
+                        <pre>
+{
+    _id = null,
+    title = 'Your title',
+    description = 'Your description',
+    price = 12.5
+}
+                        </pre>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <h3>PUT</h3>
+                <ul>
+                    <li>
+                        <code>/products</code>
+                        <p>Update a product into the database.</p>
+                        <p>Model use for product :</p>
+                        <pre>
+{
+    _id = '80ekywaf',
+    title = 'Your title updated',
+    description = 'Your description updated',
+    price = 116.1,
+    _rev: '1-2a387c1924a3451f50e2205438e5aa06'
+}
+                        </pre>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <h3>DELETE</h3>
+                <ul>
+                    <li>
+                        <code>/products/{id}</code>
+                        <p>Delete a product into the database.</p>
+                        <p>Exemple : <code>http://localhost:3001/products/80ekywaf</code></p>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <h1>Others</h1>
+        <h3>Returned values</h3>
+        <ul>
+            <li>
+                Successful request
+                <pre>
+{
+    success: true,
+    result: {...}
+}
+                </pre>
+            </li>
+            <li>
+                Failed request
+                <pre>
+{
+    success: false,
+    message: '...'
+    error: {...}
+}
+                </pre>
+            </li>
+        </ul>
+    </body>
+</html>

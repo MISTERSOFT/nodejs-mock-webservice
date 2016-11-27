@@ -18,19 +18,16 @@ let db = new Database();
 let Rest = new REST(db);
 
 // Init http server
+app.set('view engine', 'html');
+app.use(express.static(__dirname + '/views'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
+/**
+ * GET
+ */
 app.get('/', (req, res, next) => {
-    let text = '';
-    text += 'Hello !\n';
-    text += 'You can use these routes bellow\n';
-    text += '* GET :\n';
-    text += '/products\n';
-    text += '/products/:id\n';
-    text += '* POST :\n';
-    text += '/products => With params { title: "A title", description: "A description", price: 10 }\n';
-    text += 'TODO';
-    res.end(text);
+    res.render('index.html');
 });
 
 // Feed database
@@ -53,9 +50,6 @@ app.get('/destroy', (req, res, next) => {
     });
 });
 
-/**
- * GET
- */
 app.get('/products', (req, res, next) => {
     Rest.get().then((data) => {
         console.log('data ? ', data);
