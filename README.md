@@ -41,7 +41,7 @@ You can access to the API via these URLs bellow using Http request method :
     * /products
     Create a product into the database.
     Model use for product :
-    ```json
+    ```javascript
     {
         _id = null,
         title = 'Your title',
@@ -53,7 +53,7 @@ You can access to the API via these URLs bellow using Http request method :
     * /products
     Update a product into the database.
     Model use for product :
-    ```json
+    ```javascript
     {
         _id = '80ekywaf',
         title = 'Your title updated',
@@ -73,15 +73,15 @@ You can access to the API via these URLs bellow using Http request method :
     ```json
     {
         success: true,
-        result: {...}
+        result: {}
     }
     ```
     * Failed request
     ```json
     {
         success: false,
-        message: '...'
-        error: {...}
+        message: 'error text'
+        error: {}
     }
     ```
 * Server run on port 3001, change the port in the "contants.js" file if you need.
