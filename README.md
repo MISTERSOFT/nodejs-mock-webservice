@@ -1,8 +1,8 @@
 # nodejs-mock-webservice
 
 ## Presentation
-This API allow you to access mock data. You have to test you code with some data via an API but you don't have any network ? You can download this on [Github](https://github.com/MISTERSOFT/nodejs-mock-webservice) !
-All returning data are in JSON.
+This API allow you to access mock data. You have to test your code with some data via an API but you have no internet connection ? You can download this on [Github](https://github.com/MISTERSOFT/nodejs-mock-webservice) !
+All returned data are in JSON.
 
 ## Pre-requisites
 * [Install NodeJS](https://nodejs.org/en/) - (Use a version of NodeJS that allow ES6 Javascript)
