@@ -1,4 +1,6 @@
 module.exports = {
     host: 'localhost',
-    httpPort: 3001
+    httpPort: 3001,
+    typeProduct: 'products',
+    typeUser: 'users'
 };

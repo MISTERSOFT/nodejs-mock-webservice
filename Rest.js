@@ -24,14 +24,14 @@ module.exports = class REST {
      * @param {string} [id] ID of the product to fetch
      * @returns {Object}
      */
-    get(id = null) {
+    get(type, id = null) {
         if (id === null) {
-            return this.db.getAllProducts()
+            return this.db.getAll(type)
                 .then(this.successPromise)
                 .catch(this.errorPromise);
         }
         else {
-            return this.db.getProduct('products/' + id)
+            return this.db.get(type + '/' + id)
                 .then(this.successPromise)
                 .catch(this.errorPromise);
         }
@@ -42,9 +42,9 @@ module.exports = class REST {
      * @param   {Object} product The object of the product to create
      * @returns {Object}
      */
-    post(product = null) {
-        product._id = this.db.generateUniqueID();
-        return this.db.addProduct(product)
+    post(type, obj = null) {
+        obj._id = this.db.generateUniqueID();
+        return this.db.add(type, obj)
             .then(this.successPromise)
             .catch(this.errorPromise);
     }
@@ -54,8 +54,8 @@ module.exports = class REST {
      * @param   {Object} product  The object of the product to update
      * @returns {Object}
      */
-    put(product) {
-        return this.db.updateProduct(product)
+    put(type, product) {
+        return this.db.update(type, product)
             .then(this.successPromise)
             .catch(this.errorPromise);
     }
@@ -65,8 +65,8 @@ module.exports = class REST {
      * @param   {string} id ID of the product to delete
      * @returns {Object}
      */
-    delete(id = null) {
-        return this.db.deleteProduct(id)
+    delete(type, id = null) {
+        return this.db.deletet(type, id)
             .then(this.successPromise)
             .catch(this.errorPromise);
     }

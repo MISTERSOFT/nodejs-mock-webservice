@@ -7,13 +7,18 @@ const Constants = require('./constants.js');
 
 const express = require('express');
 const bodyParser = require('body-parser');
-// const http = require('http');
 const Database = require('./database.js');
 const REST = require('./Rest.js');
-
+const Faker = require('faker');
+// console.log('Fake ', Faker.address.streetAddress());
+// console.log('Fake ', Faker.address.streetName());
+// console.log('Fake ', Faker.address.city());
+// console.log('Fake ', Faker.address.zipCode());
+// console.log('Fake ', Faker.address.country());
+// console.log('----');
+// console.log('Fake ', Faker.helpers.userCard());
 // Variables
 let app = express();
-// let httpServer = null;
 let db = new Database();
 let Rest = new REST(db);
 
@@ -51,14 +56,14 @@ app.get('/destroy', (req, res, next) => {
 });
 
 app.get('/products', (req, res, next) => {
-    Rest.get().then((data) => {
+    Rest.get(Constants.typeUser).then((data) => {
         console.log('data ? ', data);
         _responseServer(res, data);
     });
 });
 
 app.get('/products/:id', (req, res, next) => {
-    Rest.get(req.params.id).then((data) => {
+    Rest.get(Constants.typeProduct, req.params.id).then((data) => {
         _responseServer(res, data);
     });
 });
