@@ -10,19 +10,12 @@ module.exports = class REST {
         this.db = database;
     }
 
-    ////
-
-    getJson() {
-        return JSON.stringify(this.json);
-    }
-
-
     //// Methods
 
     /**
      * GET Http Method
      * @param {string} [id] ID of the product to fetch
-     * @returns {Object}
+     * @returns {Object}    Promise
      */
     get(type, id = null) {
         if (id === null) {
@@ -31,7 +24,7 @@ module.exports = class REST {
                 .catch(this.errorPromise);
         }
         else {
-            return this.db.get(type + '/' + id)
+            return this.db.get(type, type + '/' + id)
                 .then(this.successPromise)
                 .catch(this.errorPromise);
         }
@@ -40,10 +33,10 @@ module.exports = class REST {
     /**
      * POST Http Method
      * @param   {Object} product The object of the product to create
-     * @returns {Object}
+     * @returns {Object}         Promise
      */
     post(type, obj = null) {
-        obj._id = this.db.generateUniqueID();
+        obj._id = this.db.generateUniqueID(type);
         return this.db.add(type, obj)
             .then(this.successPromise)
             .catch(this.errorPromise);
@@ -52,10 +45,10 @@ module.exports = class REST {
     /**
      * PUT Http Method
      * @param   {Object} product  The object of the product to update
-     * @returns {Object}
+     * @returns {Object}          Promise
      */
-    put(type, product) {
-        return this.db.update(type, product)
+    put(type, obj) {
+        return this.db.update(type, obj)
             .then(this.successPromise)
             .catch(this.errorPromise);
     }
@@ -63,10 +56,10 @@ module.exports = class REST {
     /**
      * DELETE Http Method
      * @param   {string} id ID of the product to delete
-     * @returns {Object}
+     * @returns {Object}    Promise
      */
     delete(type, id = null) {
-        return this.db.deletet(type, id)
+        return this.db.delete(type, type + '/' + id)
             .then(this.successPromise)
             .catch(this.errorPromise);
     }

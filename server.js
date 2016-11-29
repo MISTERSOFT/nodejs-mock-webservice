@@ -2,6 +2,9 @@
  * Node version : 6.9.1
  */
 
+/* START */
+console.log('Please wait...');
+
 // Import
 const Constants = require('./constants.js');
 
@@ -28,12 +31,14 @@ app.use(express.static(__dirname + '/views'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-/**
+/***************************
  * GET
- */
+ **************************/
 app.get('/', (req, res, next) => {
     res.render('index.html');
 });
+
+/*********** FEED & DESTROY THE DATABASE ***********/
 
 // Feed database
 app.get('/generate', (req, res, next) => {
@@ -55,8 +60,12 @@ app.get('/destroy', (req, res, next) => {
     });
 });
 
+
+/*********** FETCH ALL OR ONE PRODUCT/USER ***********/
+
+// Products
 app.get('/products', (req, res, next) => {
-    Rest.get(Constants.typeUser).then((data) => {
+    Rest.get(Constants.typeProduct).then((data) => {
         console.log('data ? ', data);
         _responseServer(res, data);
     });
@@ -68,29 +77,62 @@ app.get('/products/:id', (req, res, next) => {
     });
 });
 
-/**
+// Users
+app.get('/users', (req, res, next) => {
+    Rest.get(Constants.typeUser).then((data) => {
+        console.log('data ? ', data);
+        _responseServer(res, data);
+    });
+});
+
+app.get('/users/:id', (req, res, next) => {
+    Rest.get(Constants.typeUser, req.params.id).then((data) => {
+        _responseServer(res, data);
+    });
+});
+
+
+/**************************
  * POST
- */
+ **************************/
 app.post('/products', (req, res, next) => {
-    Rest.post(req.body).then((data) => {
+    Rest.post(Constants.typeProduct, req.body).then((data) => {
         _responseServer(res, data);
     });
 });
 
-/**
+app.post('/users', (req, res, next) => {
+    Rest.post(Constants.typeUser, req.body).then((data) => {
+        _responseServer(res, data);
+    });
+});
+
+/*************************
  * PUT
- */
+ ************************/
 app.put('/products', (req, res, next) => {
-    Rest.put(req.body).then((data) => {
+    Rest.put(Constants.typeProduct, req.body).then((data) => {
         _responseServer(res, data);
     });
 });
 
-/**
+app.put('/users', (req, res, next) => {
+    Rest.put(Constants.typeUser, req.body).then((data) => {
+        _responseServer(res, data);
+    });
+});
+
+/*************************
  * DELETE
- */
+ *************************/
 app.delete('/products/:id', (req, res, next) => {
-    Rest.delete('products/' + req.params.id).then((data) => {
+    Rest.delete(Constants.typeProduct, req.params.id).then((data) => {
+        _responseServer(res, data);
+    });
+});
+
+app.delete('/users/:id', (req, res, next) => {
+    Rest.delete(Constants.typeUser, req.params.id).then((data) => {
         _responseServer(res, data);
     });
 });
