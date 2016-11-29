@@ -1,5 +1,8 @@
 const PouchDB = require('pouchdb');
 const Product = require('./models/product.js');
+const User = require('./models/user.js');
+const Faker = require('faker');
+const Constants = require('./constants.js');
 
 // let database = new PouchDB('market');
 
@@ -12,16 +15,41 @@ module.exports = class Database {
     /**
      * Fill the database with some mock data
      */
-    fillDatabaseWithMockData (howManyProduct) {
+    fillDatabaseWithMockData(howManyProduct) {
+        this.hasDatabase();
         var i = 0;
         for(i; i < howManyProduct; i++) {
-            let price = (Math.random() * ( (i + 1) - i) + i).toFixed(2);
-            this.addProduct(
+
+            let fakeUser = Faker.helpers.userCard();
+            fakeUser.avatar = Faker.internet.avatar(50, 50);
+            delete fakeUser.website;
+            delete fakeUser.company;
+
+            this.add(
+                Constants.typeProduct,
                 new Product(
-                    this.generateUniqueID(),
-                    'Product number ' + i,
-                    'Description of product ' + i,
-                    price
+                    this.generateUniqueID(Constants.typeProduct),
+                    Faker.commerce.product(),
+                    Faker.lorem.sentence(20),
+                    Faker.commerce.price(),
+                    Faker.commerce.color(),
+                    Faker.commerce.department(),
+                    Faker.commerce.productMaterial(),
+                    Faker.image.food(50, 50),
+                    Faker.image.food(300, 200)
+                )
+            );
+
+            this.add(
+                Constants.typeUser,
+                new User(
+                    this.generateUniqueID(Constants.typeUser),
+                    fakeUser.username,
+                    fakeUser.name,
+                    fakeUser.email,
+                    fakeUser.address,
+                    fakeUser.phone,
+                    fakeUser.avatar
                 )
             );
         }
@@ -30,19 +58,20 @@ module.exports = class Database {
     /**
      * Generate unique ID
      */
-    generateUniqueID () {
-        return 'products/' + Math.random().toString(36).substr(2, 9);
+    generateUniqueID(type) {
+        return type + '/' + Math.random().toString(36).substr(2, 9);
     }
 
     /**
      * Delete database
      * Call this function is you want to reset all data
      */
-    deleteMockData () {
+    deleteMockData() {
 
         return this.database.destroy().then((response) => {
 
             if (response.ok) {
+                this.database = null;
                 console.log('*************************************');
                 console.log('* Database successfully destroyed ! *');
                 console.log('*************************************');
@@ -62,24 +91,26 @@ module.exports = class Database {
 
     /**
      * Add product into database
-     * @param {object} product Product to add
+     * @param {string} type Type of doc products/users
+     * @param {object} obj  Object to add
      */
-    addProduct (product) {
+    add(type, obj) {
 
-        return this.database.put(product).then((result) => {
+        this.hasDatabase();
+
+        return this.database.put(obj).then((result) => {
 
             if (result.ok) {
-                console.log('Product successfully added ! With ID : ' + result.id);
-                // todo : return JSON success
+                console.log( type + ' successfully added ! With ID : ' + result.id);
                 return Promise.resolve(result);
             }
             
         }).catch((error) => {
 
-            console.log('Error happened, the product couln\'t be added !', error);
+            console.log('Error happened, the ' + type + ' couln\'t be added !', error);
             return Promise.reject({
                 success: false,
-                message: 'Error happened, the product couln\'t be added !',
+                message: 'Error happened, the ' + type + ' couln\'t be added !',
                 error: error
             });
         });
@@ -89,27 +120,54 @@ module.exports = class Database {
 
     /**
      * Update product into database
-     * @param {object} product  Contain the new value of the product
+     * @param {string} type     Type of doc product or user
+     * @param {object} object   Contain the new value of the product/user
      */
-    updateProduct (product) {
+    update(type, obj) {
 
-        return this.database.put({
-            _id: product._id,
-            _rev: product._rev,
-            title: product.title,
-            price: product.price,
-            description: product.description
-        }).then((result) => {
+        this.hasDatabase();
+
+        let insert = {};
+
+        if (type === Constants.typeUser) {
+            insert = {
+                _id: obj._id,
+                _rev: obj._rev,
+                username: obj.username,
+                name: obj.name,
+                email: obj.email,
+                address: obj.address,
+                phone: obj.phone,
+                avatar: obj.avatar
+            };
+        }
+
+        if (type === Constants.typeProduct) {
+            insert = {
+                _id: obj._id,
+                _rev: obj._rev,
+                title: obj.title,
+                description: obj.description,
+                price: obj.price,
+                color: obj.color,
+                department: obj.department,
+                material: obj.material,
+                thumb: obj.thumb,
+                image: obj.image
+            };
+        }
+
+        return this.database.put(insert).then((result) => {
             if (result.ok) {
-                console.log('Product successfully updated !', result);
+                console.log(type + ' successfully updated !', result);
                 return Promise.resolve(result);
             }
         }).catch((error) => {
 
-            console.log('Error happened, the product couln\'t be updated !', error);
+            console.log('Error happened, ' + type + ' couln\'t be updated !', error);
             return Promise.reject({
                 success: false,
-                message: 'Error happened, the product couln\'t be updated !',
+                message: 'Error happened, ' + type + ' couln\'t be updated !',
                 error: error
             });
         });
@@ -119,9 +177,12 @@ module.exports = class Database {
 
     /**
      * Delete a product into the database
-     * @param {string} id Product ID
+     * @param {string} type Type of doc products/users
+     * @param {string} id   Doc ID
      */
-    deleteProduct (id) {
+    delete(type, id) {
+
+        this.hasDatabase();
 
         return this.database.get(id).then((doc) => {
 
@@ -130,16 +191,16 @@ module.exports = class Database {
         }).then((result) => {
 
             if (result.ok) {
-                console.log('Product successfully deleted !', result);
+                console.log(type + ' successfully deleted !', result);
                 return Promise.resolve(result);
             }
 
         }).catch((error) => {
 
-            console.log('Error happened, the product couln\'t be deleted !', error);
+            console.log('Error happened, ' + type + ' couln\'t be deleted !', error);
             return Promise.reject({
                 success: false,
-                message: 'Error happened, the product couln\'t be deleted !',
+                message: 'Error happened, ' + type + ' couln\'t be deleted !',
                 error: error
             });
         });
@@ -149,23 +210,26 @@ module.exports = class Database {
 
     /**
      * Fetch a product from the database
-     * @param {string} id Product ID
+     * @param {string} type Type of doc products/users
+     * @param {string} id   Doc ID
      */
-    getProduct (id) {
+    get(type, id) {
+
+        this.hasDatabase();
 
         return this.database.get(id).then((doc) => {
 
             if (doc) {
-                console.log('Product successfully fetched !', doc);
+                console.log(type + ' successfully fetched !', doc);
                 return Promise.resolve(doc);
             }
 
         }).catch((error) => {
 
-            console.log('Error happened, the product couln\'t be fetched !', error);
+            console.log('Error happened, ' + type + ' couln\'t be fetched !', error);
             return Promise.reject({
                 success: false,
-                message: 'Error happened, the product couln\'t be fetched !',
+                message: 'Error happened, ' + type + ' couln\'t be fetched !',
                 error: error
             });
         });
@@ -174,27 +238,40 @@ module.exports = class Database {
 
 
     /**
-     * Fetch all products from the database
+     * Fetch all doc from the database by type
      */
-    getAllProducts () {
+    getAll(type) {
+
+        this.hasDatabase();
 
         return this.database.allDocs({
 
-            include_docs: true
+            include_docs: true,
+            startkey: type,
+            endkey: type + '\uffff'
 
         }).then((result) => {
             
-            console.log('Products successfully fetched !', result);
+            console.log(type + ' successfully fetched !', result);
             return new Promise((resolve, reject) => {
                 resolve(result);
             });
 
         }).catch((error) => {
 
-            console.log('Error happened, products couln\'t be fetched !', error);
+            console.log('Error happened, ' + type + ' couln\'t be fetched !', error);
             return Promise.reject(error);
         });
 
+    }
+
+    /**
+     * Check if the database is created
+     */
+    hasDatabase() {
+        if (this.database === null) {
+            this.database = new PouchDB('market');
+        }
     }
 
 }

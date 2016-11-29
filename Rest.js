@@ -10,28 +10,21 @@ module.exports = class REST {
         this.db = database;
     }
 
-    ////
-
-    getJson() {
-        return JSON.stringify(this.json);
-    }
-
-
     //// Methods
 
     /**
      * GET Http Method
      * @param {string} [id] ID of the product to fetch
-     * @returns {Object}
+     * @returns {Object}    Promise
      */
-    get(id = null) {
+    get(type, id = null) {
         if (id === null) {
-            return this.db.getAllProducts()
+            return this.db.getAll(type)
                 .then(this.successPromise)
                 .catch(this.errorPromise);
         }
         else {
-            return this.db.getProduct('products/' + id)
+            return this.db.get(type, type + '/' + id)
                 .then(this.successPromise)
                 .catch(this.errorPromise);
         }
@@ -40,11 +33,11 @@ module.exports = class REST {
     /**
      * POST Http Method
      * @param   {Object} product The object of the product to create
-     * @returns {Object}
+     * @returns {Object}         Promise
      */
-    post(product = null) {
-        product._id = this.db.generateUniqueID();
-        return this.db.addProduct(product)
+    post(type, obj = null) {
+        obj._id = this.db.generateUniqueID(type);
+        return this.db.add(type, obj)
             .then(this.successPromise)
             .catch(this.errorPromise);
     }
@@ -52,10 +45,10 @@ module.exports = class REST {
     /**
      * PUT Http Method
      * @param   {Object} product  The object of the product to update
-     * @returns {Object}
+     * @returns {Object}          Promise
      */
-    put(product) {
-        return this.db.updateProduct(product)
+    put(type, obj) {
+        return this.db.update(type, obj)
             .then(this.successPromise)
             .catch(this.errorPromise);
     }
@@ -63,10 +56,10 @@ module.exports = class REST {
     /**
      * DELETE Http Method
      * @param   {string} id ID of the product to delete
-     * @returns {Object}
+     * @returns {Object}    Promise
      */
-    delete(id = null) {
-        return this.db.deleteProduct(id)
+    delete(type, id = null) {
+        return this.db.delete(type, type + '/' + id)
             .then(this.successPromise)
             .catch(this.errorPromise);
     }
