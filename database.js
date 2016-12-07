@@ -253,8 +253,13 @@ module.exports = class Database {
         }).then((result) => {
             
             console.log(type + ' successfully fetched !', result);
+
+            let data = [];
+            for (var i in result.rows) {
+                data.push(result.rows[i].doc);
+            }
             return new Promise((resolve, reject) => {
-                resolve(result);
+                resolve(data);
             });
 
         }).catch((error) => {
