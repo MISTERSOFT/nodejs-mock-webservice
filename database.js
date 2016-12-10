@@ -35,8 +35,8 @@ module.exports = class Database {
                     Faker.commerce.color(),
                     Faker.commerce.department(),
                     Faker.commerce.productMaterial(),
-                    Faker.image.food(50, 50),
-                    Faker.image.food(300, 200)
+                    Faker.image.food(200, 100),
+                    Faker.image.food(800, 400)
                 )
             );
 
