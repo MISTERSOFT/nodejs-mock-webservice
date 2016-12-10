@@ -25,6 +25,8 @@ module.exports = class Database {
             delete fakeUser.website;
             delete fakeUser.company;
 
+            let randomPic = Math.floor(Math.random() * (10 - 1 + 1)) + 1;
+
             this.add(
                 Constants.typeProduct,
                 new Product(
@@ -35,8 +37,8 @@ module.exports = class Database {
                     Faker.commerce.color(),
                     Faker.commerce.department(),
                     Faker.commerce.productMaterial(),
-                    Faker.image.food(200, 100),
-                    Faker.image.food(800, 400)
+                    Faker.image.food(200, 100) + '/' + randomPic,
+                    Faker.image.food(800, 400) + '/' + randomPic
                 )
             );
 
